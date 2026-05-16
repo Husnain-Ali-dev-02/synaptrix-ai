@@ -27,7 +27,7 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = ({
       )}
 
       {/* Sidebar */}
-      <aside
+ <aside
         className={cn(
           "fixed top-0 left-0 bottom-0 z-40",
           "w-80 h-full",
@@ -37,6 +37,7 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = ({
           "transition-transform duration-300 ease-in-out",
           isOpen ? "translate-x-0" : "-translate-x-full"
         )}
+      
       >
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-4 border-b border-(--color-border-subtle)">
