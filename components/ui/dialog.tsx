@@ -4,8 +4,24 @@ import { cn } from "../../lib/utils";
 
 const DialogContext = createContext<any>(null);
 
-export const Dialog = ({ children }: { children: React.ReactNode }) => {
-  const [open, setOpen] = useState(false);
+export const Dialog = ({
+  children,
+  open: controlledOpen,
+  onOpenChange,
+}: {
+  children: React.ReactNode;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}) => {
+  const [internalOpen, setInternalOpen] = useState(false);
+  const isControlled = controlledOpen !== undefined;
+  const open = isControlled ? controlledOpen : internalOpen;
+  const setOpen = (newOpen: boolean) => {
+    if (!isControlled) {
+      setInternalOpen(newOpen);
+    }
+    onOpenChange?.(newOpen);
+  };
   return <DialogContext.Provider value={{ open, setOpen }}>{children}</DialogContext.Provider>;
 };
 
@@ -16,12 +32,36 @@ export const DialogTrigger = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export const DialogContent = ({ children }: { children: React.ReactNode }) => {
+export const DialogContent = ({
+  children,
+  showCloseButton = true,
+}: {
+  children: React.ReactNode;
+  showCloseButton?: boolean;
+}) => {
   const ctx = useContext(DialogContext);
   if (!ctx?.open) return null;
   return (
-    <div className={cn("fixed inset-0 z-50 flex items-center justify-center p-4")}> 
-      <div className={cn("w-full max-w-lg rounded-lg bg-[var(--color-popover)] p-6 shadow-lg")}>
+    <div
+      className={cn(
+        "fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50"
+      )}
+      onClick={() => ctx?.setOpen(false)}
+    >
+      <div
+        className={cn(
+          "w-full max-w-lg rounded-lg bg-[var(--color-popover)] p-6 shadow-lg"
+        )}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {showCloseButton && (
+          <button
+            onClick={() => ctx?.setOpen(false)}
+            className={cn("absolute right-4 top-4 text-sm font-semibold")}
+          >
+            ✕
+          </button>
+        )}
         {children}
       </div>
     </div>

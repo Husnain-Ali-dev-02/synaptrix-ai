@@ -25,8 +25,8 @@ export const EditorChrome: React.FC<EditorChromeProps> = ({ children }) => {
   return (
     <>
       <EditorNavbar
-        sidebarOpen={sidebarOpen}
-        onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
+        isOpen={sidebarOpen}
+        onToggle={() => setSidebarOpen(!sidebarOpen)}
       />
       <ProjectSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <main className="flex-1 pt-16">{children}</main>
