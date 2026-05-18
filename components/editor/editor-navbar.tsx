@@ -103,7 +103,7 @@ export function EditorNavbar({
           </>
         ) : null}
 
-        {!onToggleAiSidebar ? <UserButton /> : null}
+      {!isAiSidebarOpen ? <UserButton /> : null}
       </div>
     </header>
   )

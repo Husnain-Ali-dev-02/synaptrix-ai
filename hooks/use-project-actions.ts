@@ -83,15 +83,17 @@ export function useProjectActions() {
           router.push(`/editor/${project.id}`)
         }
       } else if (dialogType === "rename" && activeProject) {
-        await fetch(`/api/projects/${activeProject.id}`, {
+      const res = await fetch(`/api/projects/${activeProject.id}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ name: name.trim() }),
         })
+           if (!res.ok) return
         close()
         router.refresh()
       } else if (dialogType === "delete" && activeProject) {
-        await fetch(`/api/projects/${activeProject.id}`, { method: "DELETE" })
+const res = await fetch(`/api/projects/${activeProject.id}`, { method: "DELETE" })
+      if (!res.ok) return
         const isActive = pathname === `/editor/${activeProject.id}`
         close()
         if (isActive) {

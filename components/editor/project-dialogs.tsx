@@ -72,8 +72,11 @@ export function ProjectDialogs({
             placeholder="Project name"
             value={name}
             onChange={(e) => handleNameChange(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && name.trim()) submit()
+               onKeyDown={(e) => {
+              if (e.key === "Enter" && name.trim() && !loading) {
+                e.preventDefault()
+                submit()
+              }
             }}
             autoFocus
           />

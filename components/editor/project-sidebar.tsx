@@ -12,9 +12,9 @@ interface ProjectSidebarProps {
   onClose: () => void
   ownedProjects?: ProjectRow[]
   sharedProjects?: ProjectRow[]
-  onNewProject?: () => void
-  onRename?: (project: ProjectRow) => void
-  onDelete?: (project: ProjectRow) => void
+  onNewProject: () => void
+  onRename: (project: ProjectRow) => void
+  onDelete: (project: ProjectRow) => void
   activeProjectId?: string
 }
 
@@ -163,7 +163,7 @@ function ProjectItem({ project, active = false, onRename, onDelete }: ProjectIte
         {project.name}
       </Link>
       {onRename && onDelete && (
-        <div className="flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+  <div className="flex shrink-0 gap-0.5 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100">
           <Button
             variant="ghost"
             size="icon-sm"
