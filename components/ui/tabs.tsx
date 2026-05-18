@@ -4,9 +4,21 @@ import { cn } from "../../lib/utils";
 
 const TabsContext = createContext<any>(null);
 
-export const Tabs = ({ defaultValue, children }: { defaultValue?: string; children: React.ReactNode }) => {
+export const Tabs = ({
+  defaultValue,
+  children,
+  className,
+}: {
+  defaultValue?: string;
+  children: React.ReactNode;
+  className?: string;
+}) => {
   const [value, setValue] = useState(defaultValue || undefined);
-  return <TabsContext.Provider value={{ value, setValue }}>{children}</TabsContext.Provider>;
+  return (
+    <TabsContext.Provider value={{ value, setValue }}>
+      <div className={className}>{children}</div>
+    </TabsContext.Provider>
+  );
 };
 
 export const TabsList = ({ children, className }: { children: React.ReactNode; className?: string }) => (
@@ -23,10 +35,18 @@ export const TabsTrigger = ({ value, children, className }: { value: string; chi
   );
 };
 
-export const TabsContent = ({ value, children }: { value: string; children: React.ReactNode }) => {
+export const TabsContent = ({
+  value,
+  children,
+  className,
+}: {
+  value: string;
+  children: React.ReactNode;
+  className?: string;
+}) => {
   const ctx = useContext(TabsContext);
   if (ctx?.value !== value) return null;
-  return <div className={cn("mt-2")}>{children}</div>;
+  return <div className={cn("mt-2", className)}>{children}</div>;
 };
 
 export default Tabs;

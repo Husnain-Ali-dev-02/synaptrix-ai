@@ -1,56 +1,110 @@
-"use client";
+"use client"
 
-import React from "react";
-import { PanelLeftOpen, PanelLeftClose } from "lucide-react";
-import { UserButton } from "@clerk/nextjs";
-import { cn } from "@/lib/utils";
-import Button from "@/components/ui/button";
+import { LayoutTemplate, PanelLeftClose, PanelLeftOpen, Save, Share2, Sparkles } from "lucide-react"
+import { UserButton } from "@clerk/nextjs"
+import { Button } from "@/components/ui/button"
+import type { SaveStatus } from "@/hooks/use-canvas-autosave"
 
 interface EditorNavbarProps {
-  sidebarOpen: boolean;
-  onToggleSidebar: () => void;
+  isOpen: boolean
+  onToggle: () => void
+  projectName?: string
+  isAiSidebarOpen?: boolean
+  onToggleAiSidebar?: () => void
+  onOpenShareDialog?: () => void
+  onOpenTemplates?: () => void
+  saveStatus?: SaveStatus
+  onSave?: () => void
 }
 
-export const EditorNavbar: React.FC<EditorNavbarProps> = ({
-  sidebarOpen,
-  onToggleSidebar,
-}) => {
+export function EditorNavbar({
+  isOpen,
+  onToggle,
+  projectName,
+  isAiSidebarOpen = false,
+  onToggleAiSidebar,
+  onOpenShareDialog,
+  onOpenTemplates,
+  saveStatus,
+  onSave,
+}: EditorNavbarProps) {
   return (
-    <nav
-      className={cn(
-        "fixed top-0 left-0 right-0 z-40",
-        "h-16 flex items-center",
-        "bg-(--color-bg-elevated)",
-        "border-b border-(--color-border-subtle)"
-      )}
-    >
-      {/* Left section - Sidebar toggle */}
-      <div className="flex items-center px-4">
-        <Button
-          variant="ghost"
-          onClick={onToggleSidebar}
-          className="p-2"
-          aria-label={sidebarOpen ? "Close sidebar" : "Open sidebar"}
-        >
-          {sidebarOpen ? (
-            <PanelLeftClose className="h-5 w-5 text-(--color-text-primary)" />
+    <header className="flex h-12 shrink-0 items-center justify-between border-b border-border-default bg-bg-surface px-3">
+      <div className="flex min-w-0 items-center gap-3">
+        <Button variant="ghost" size="icon" onClick={onToggle}>
+          {isOpen ? (
+            <PanelLeftClose className="h-5 w-5" />
           ) : (
-            <PanelLeftOpen className="h-5 w-5 text-(--color-text-primary)" />
+            <PanelLeftOpen className="h-5 w-5" />
           )}
+          <span className="sr-only">Toggle sidebar</span>
         </Button>
+
+        {projectName ? (
+          <div className="min-w-0">
+            <p className="truncate text-sm font-medium text-text-primary">{projectName}</p>
+            <p className="text-xs text-text-faint">Workspace</p>
+          </div>
+        ) : null}
       </div>
 
-      {/* Center section - Title/Logo */}
-      <div className="flex-1 flex items-center justify-center">
-        {/* Empty for now - can be extended with project name, breadcrumbs, etc. */}
-      </div>
+      <div className="flex items-center gap-2">
+        {onToggleAiSidebar ? (
+          <>
+            {onSave ? (
+              <Button
+                variant="default"
+                size="default"
+                className="gap-2"
+                onClick={onSave}
+                disabled={saveStatus === "saving"}
+              >
+                <Save className="h-4 w-4" />
+                {saveStatus === "saving"
+                  ? "Saving..."
+                  : saveStatus === "saved"
+                  ? "Saved"
+                  : saveStatus === "error"
+                  ? "Error"
+                  : "Save"}
+              </Button>
+            ) : null}
+            {onOpenTemplates ? (
+              <Button
+                variant="ghost"
+                size="default"
+                className="gap-2"
+                onClick={onOpenTemplates}
+              >
+                <LayoutTemplate className="h-4 w-4" />
+                Templates
+              </Button>
+            ) : null}
+            {onOpenShareDialog ? (
+              <Button
+                variant="ghost"
+                size="default"
+                className="gap-2"
+                onClick={onOpenShareDialog}
+              >
+                <Share2 className="h-4 w-4" />
+                Share
+              </Button>
+            ) : null}
+            <Button
+              variant={isAiSidebarOpen ? "default" : "ghost"}
+              size="default"
+              className="gap-2"
+              onClick={onToggleAiSidebar}
+            >
+              <Sparkles className="h-4 w-4" />
+              AI
+            </Button>
+          </>
+        ) : null}
 
-      {/* Right section - Actions */}
-      <div className="flex items-center px-4 gap-4">
-        <UserButton />
+      {!isAiSidebarOpen ? <UserButton /> : null}
       </div>
-    </nav>
-  );
-};
-
-export default EditorNavbar;
+    </header>
+  )
+}
